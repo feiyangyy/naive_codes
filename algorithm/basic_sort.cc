@@ -205,11 +205,13 @@ struct MergeSortBT {
     for(int i = l; i<r; ++i) {
       input[i] = help[i];
     }
+    assert(std::is_sorted(input.begin() + l, input.begin() + r - 1));
   }
   // 此处的问题：步长的划分, 2 4 8 ... 
   // 这里有个数学上的问题，就是任意数（数组长度）和2^n 的关系，比如 19 最接近的是 16, 相差3 对于归并来说，相差1是可以兼容的
   // 这里要理解这个过程
   void Sort(std::vector<int>& input) {
+     // 此处是生成的步长有问题...
     std::vector<int> steps;
     for (int k = input.size(); k > 1; k >>= 1)
     {
@@ -364,7 +366,12 @@ int main(int argc, char** argv) {
     PrintVect<std::string>(support_type);
     return -1;
   }
-  assert(std::is_sorted(v.begin(), v.end()));
+  // assert(std::is_sorted(v.begin(), v.end()));
+  for (int k = 1; k < v.size(); ++k) {
+      if (v[k] < v[k - 1]) {
+          printf("FK!%d\n", k);
+      }
+  }
   auto end = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double, std::milli> duration = end -start;
   printf("Sort type %s, data_size:%ld, Time cost:%lf ms\n", st.c_str(), v.size(), duration.count());
