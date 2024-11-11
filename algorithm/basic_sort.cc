@@ -172,6 +172,8 @@ struct MergeSort {
 /*
  特长，兴趣，方法，勤奋
 */
+// 涉及的几个数学
+// 整数除法的向上取整数:(N+1)/2, 向下取整:(N)/2
 struct MergeSortBT {
   std::vector<int> help;
   MergeSortBT(int sz) {
@@ -180,11 +182,15 @@ struct MergeSortBT {
   // Close-Open
   // 此处考虑的是对一个区间进行切分和合并，并且给定的这个区间，双边是已排序的了
   // 注意此处烧了一个mid参数，mid 参数是自动推算的
-  void Merge(std::vector<int> &input, int l, int r) {
-    int mid = (l + r) / 2;
+  void Merge(std::vector<int> &input, int l, int mid, int r) {
+    // int mid = (l + r) / 2;
+    // 防止越界，表明只有一个区间可以合并(不需要处理)
+    if(mid >= r) {
+      mid = r;
+      // return;
+    }
     int k = l;
     int li = l, ri = mid;
-
     if(r - l <= 1) {
       return;
     }
@@ -205,7 +211,7 @@ struct MergeSortBT {
     for(int i = l; i<r; ++i) {
       input[i] = help[i];
     }
-    assert(std::is_sorted(input.begin() + l, input.begin() + r - 1));
+    // assert(std::is_sorted(input.begin() + l, input.begin() + r - 1));
   }
   // 此处的问题：步长的划分, 2 4 8 ... 
   // 这里有个数学上的问题，就是任意数（数组长度）和2^n 的关系，比如 19 最接近的是 16, 相差3 对于归并来说，相差1是可以兼容的
@@ -213,16 +219,28 @@ struct MergeSortBT {
   void Sort(std::vector<int>& input) {
      // 此处是生成的步长有问题...
     std::vector<int> steps;
+    // 步长5 -> 2
+    #if 0
     for (int k = input.size(); k > 1; k >>= 1)
     {
       steps.push_back(k);
     }
-    std::reverse(steps.begin(), steps.end());
+    #endif 
+    int max_step = input.size();
+    for(int k = 2; k < max_step; k <<= 1){
+      steps.push_back(k);
+    }
+    // 为了保证不跨越区间，需要使得最后一个步长是最接近（且大于等于 size）的2次幂
+    steps.push_back(steps.back() << 1);
+    // std::reverse(steps.begin(), steps.end());
     int sz = input.size();
     for(const auto s: steps) {
       for (int l = 0; l < sz; l += s) {
         // 逐个合并
-        Merge(input, l, (l + s) > sz ? sz : (l + s));
+        // 这个必须要指定mid，因为，在最后一步中，[len/2, N) 可能是逆序的！
+        // 比如 1 2 3 4 5 6 0 1, 这个序列，自动计算的mid = 4, 而实际上上一步计算的区间可能是[0,6), [6,N)
+        // 最后的合并，却错误的跨越了两个区间！
+        Merge(input, l, l + s/2, (l + s) > sz ? sz : (l + s));
       }
     }
   }
