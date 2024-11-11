@@ -167,6 +167,65 @@ struct MergeSort {
   }
 };
 
+// 自下而上
+/*
+ 特长，兴趣，方法，勤奋
+*/
+struct MergeSortBT {
+  std::vector<int> help;
+  MergeSortBT(int sz) {
+    help.resize(sz);
+  }
+  // Close-Open
+  // 此处考虑的是对一个区间进行切分和合并，并且给定的这个区间，双边是已排序的了
+  // 注意此处烧了一个mid参数，mid 参数是自动推算的
+  void Merge(std::vector<int> &input, int l, int r) {
+    int mid = (l + r) / 2;
+    int k = l;
+    int li = l, ri = mid;
+
+    if(r - l <= 1) {
+      return;
+    }
+    while(li < mid && ri < r) {
+      if(input[li] < input[ri]) {
+        help[k++] = input[li++];
+      } else {
+        help[k++] = input[ri++];
+      }
+    }
+    // 注意这个地方的边界，为什么会经常写错呢? 比如 li< mid, 写成li < l
+    while(li < mid) {
+      help[k++] = input[li++];
+    }
+    while(ri < r) {
+      help[k++] = input[ri++];
+    }
+    for(int i = l; i<r; ++i) {
+      input[i] = help[i];
+    }
+  }
+  // 此处的问题：步长的划分, 2 4 8 ... 
+  // 这里有个数学上的问题，就是任意数（数组长度）和2^n 的关系，比如 19 最接近的是 16, 相差3 对于归并来说，相差1是可以兼容的
+  // 这里要理解这个过程
+  void Sort(std::vector<int>& input) {
+    std::vector<int> steps;
+    for (int k = input.size(); k > 1; k >>= 1)
+    {
+      steps.push_back(k);
+    }
+    std::reverse(steps.begin(), steps.end());
+    int sz = input.size();
+    for(const auto s: steps) {
+      for (int l = 0; l < sz; l += s) {
+        // 逐个合并
+        Merge(input, l, (l + s) > sz ? sz : (l + s));
+      }
+    }
+  }
+
+};
+
 std::vector<int> ReadInputs(const std::string& file) {
   std::fstream ifs(file) ;
   if(!ifs.is_open()) {
@@ -188,7 +247,7 @@ std::vector<int> ReadInputs(const std::string& file) {
 
 int main(int argc, char** argv) {
 
-  CLI::App app{"A simple CLI11 example"};
+  CLI::App app{"Sort algorithm implementations."};
   std::string file;
   std::string st;
   app.add_option("-f,--file", file, "InputFile")->required();
@@ -206,6 +265,9 @@ int main(int argc, char** argv) {
     // v = GenreateRandom(16, -10000, 10000);
     auto ms = MergeSort(v.size());
     ms.Sort(v, 0, v.size() /2, v.size());
+  } else if(st == "msbt") {
+    auto ms = MergeSortBT(v.size());
+    ms.Sort(v);
   }
   assert(std::is_sorted(v.begin(), v.end()));
   auto end = std::chrono::high_resolution_clock::now();
