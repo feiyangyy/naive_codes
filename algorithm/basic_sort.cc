@@ -161,6 +161,7 @@ struct MergeSort {
       // printf("Return!\n");
       return ;
     }
+    // 先递归，再处理
     Sort(input, l, (mid + l)/2, mid);
     Sort(input, mid, (r + mid)/2, r);
     Merge(input, l, mid, r);
@@ -245,6 +246,80 @@ std::vector<int> ReadInputs(const std::string& file) {
   return res;
 }
 
+// 快速排序
+// 快排核心理念：随机选取一个元素，并使得比该元素小的都位于此元素坐标， 比他大的，都位于其右边，由此细分下去,再对左边、右边分别执行这些操作
+// 操作的方法是:记录此元素，并用两个指针（双指针法），一个l->r，一个r->l
+struct QuickSort {
+
+  int Partition(std::vector<int> &input, int l, int r) {
+    int pl = l;
+    int pr = r - 1;
+    if (pr-pl <= 0) {
+      return l;
+    }
+    if (pr - pl == 1)
+    {
+      if (input[pr] < input[pl])
+      {
+        std::swap(input[pr], input[pl]);
+        return pl;
+      }
+      return pl;
+    }
+    // pl 不能从l + 1开始，因为如果后面没有比pl大的，就会有问题 （不要过早优化）
+    pl = l;
+    // break 时刻，要注意pl 的值是否是小于基准的，如果先pl 后 pr, 那么有可能
+    // 导致pl 停在了一个比基准值大的位置，并且与pr相遇
+    while(pl < pr) {
+      // 错误实现
+      #if 0
+      while(input[pl] <= input[l] && pl < pr) {
+        ++pl;
+      }
+      while(input[pr] >= input[l] && pl < pr) {
+        --pr;
+      }
+      #endif
+      // 如果是完全顺序的, 那么pr 已知遍历到pl 都找不到合适的位置，循环内不会发生交换
+      while(input[pr] >= input[l] && pr > pl) {
+        --pr;
+      }
+      while (input[pl] <= input[l] && pl < pr)
+      {
+        ++pl;
+      }
+
+      if(pl < pr) {
+        std::swap(input[pl], input[pr]);
+        assert(input[pl] <= input[pr]);
+      }
+    }
+    // 这里注意，左侧不一定有序，但是左侧一定比 所选的元素要小! 快排只需要保证此规则即可
+    // printf("input[l] %d\n", input[l]);
+    // 这里也就是换到那个位置? 也就是pl 这个位置的情况是什么样的?
+    if(l != pl) {
+      std::swap(input[l], input[pl]);
+    }
+    
+    return pl;
+  }
+
+  void Sort(std::vector<int>& input, int l, int r){
+    if(r-l <= 1) {
+      return;
+    }
+    // 先处理，再递归
+    int idx = Partition(input, l, r);
+    // 注意，开闭区间!
+    Sort(input, l, idx);
+    Sort(input, idx + 1, r);
+  }
+
+  void DoSort(std::vector<int>& input) {
+    Sort(input, 0, input.size());
+  }
+};
+
 int main(int argc, char** argv) {
 
   CLI::App app{"Sort algorithm implementations."};
@@ -268,6 +343,10 @@ int main(int argc, char** argv) {
   } else if(st == "msbt") {
     auto ms = MergeSortBT(v.size());
     ms.Sort(v);
+  } else if(st == "qs") {
+    // v = GenreateRandom(16, -10000, 10000);
+    auto qs = QuickSort();
+    qs.DoSort(v);
   }
   assert(std::is_sorted(v.begin(), v.end()));
   auto end = std::chrono::high_resolution_clock::now();
