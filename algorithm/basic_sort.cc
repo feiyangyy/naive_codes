@@ -320,6 +320,16 @@ struct QuickSort {
   }
 };
 
+static std::vector<std::string> support_type = {"sel", "ins", "shell", "ms", "msbt", "qs"};
+
+template <typename T>
+void PrintVect(const std::vector<T>& v) {
+  for(const auto& vi : v) {
+    std::cout << vi << ", ";
+  }
+  std::cout << std::endl;
+}
+
 int main(int argc, char** argv) {
 
   CLI::App app{"Sort algorithm implementations."};
@@ -341,12 +351,18 @@ int main(int argc, char** argv) {
     auto ms = MergeSort(v.size());
     ms.Sort(v, 0, v.size() /2, v.size());
   } else if(st == "msbt") {
+    // 实现的有问题
     auto ms = MergeSortBT(v.size());
     ms.Sort(v);
   } else if(st == "qs") {
     // v = GenreateRandom(16, -10000, 10000);
     auto qs = QuickSort();
     qs.DoSort(v);
+  } else {
+    printf("Unsupported type:%s\n", st.c_str());
+    printf("Supported type:\n");
+    PrintVect<std::string>(support_type);
+    return -1;
   }
   assert(std::is_sorted(v.begin(), v.end()));
   auto end = std::chrono::high_resolution_clock::now();
