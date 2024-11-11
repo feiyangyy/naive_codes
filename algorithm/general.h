@@ -26,5 +26,17 @@ std::vector<T> CreateVectorFromFile(const std::string& file) {
   return res;
 }
 
+template <typename T>
+struct LinkList {
+  T val;
+  LinkList* node = nullptr;
+};
+
+template <typename T>
+struct BinaryTree {
+  T val;
+  BinaryTree* left = nullptr;
+  BinaryTree* right = nullptr;
+};
 
 #endif

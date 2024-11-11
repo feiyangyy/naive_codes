@@ -174,6 +174,7 @@ struct MergeSort {
 */
 // 涉及的几个数学
 // 整数除法的向上取整数:(N+1)/2, 向下取整:(N)/2
+// 最接近N的2的二次幂
 struct MergeSortBT {
   std::vector<int> help;
   MergeSortBT(int sz) {
