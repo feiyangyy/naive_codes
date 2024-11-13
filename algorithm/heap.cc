@@ -173,6 +173,22 @@ void DoTopK(const std::string &file, int k)
   printf("\n");
 }
 
+void TestHeap() {
+  Heap<int> min_heap(5, CompareGE<int>);
+  min_heap.Push(100);
+  min_heap.Push(3000);
+  min_heap.Push(20);
+  min_heap.Push(1);
+  min_heap.Push(9);
+  min_heap.Push(-3);
+  while (!min_heap.Empty())
+  {
+    printf("%d ", min_heap.Pop());
+    // min_heap.Pop();
+  }
+  printf("\n");
+}
+
 int main(int argc, char** argv) {
   CLI::App app{"Heap implementation"};
   std::string file;
@@ -182,37 +198,5 @@ int main(int argc, char** argv) {
   app.add_option("-c, --count", cnt, "Maximum count")->required();
   CLI11_PARSE(app, argc, argv);
   DoTopK(file, cnt);
-  return 0;
-  Heap<int> min_heap(5, CompareGE<int>);
-  min_heap.Push(100);
-  min_heap.Push(3000);
-  min_heap.Push(20);
-  min_heap.Push(1);
-  min_heap.Push(9);
-  min_heap.Push(-3);
-  while(!min_heap.Empty()){
-    printf("%d ", min_heap.Pop());
-    // min_heap.Pop();
-  }
-  printf("\n");
-#if 0
-  Heap<int> foo(128);
-  auto v = GenreateRandom(128, -10000, 10000);
-  for(const auto& vv:v) {
-    foo.Push(vv);
-  }
-  v.clear();
-  while(!foo.Empty()) {
-    v.push_back(foo.Pop());
-  }
-  bool is_sort = std::is_sorted(v.begin(), v.end(), [](const int&a, const int& b){
-    return a > b;
-  });
-  if(is_sort) {
-    printf("Sorted!\n");
-  } else {
-    printf("Fucked!\n");
-  }
-#endif
   return 0;
 }

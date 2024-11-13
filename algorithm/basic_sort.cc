@@ -395,35 +395,5 @@ int main(int argc, char** argv) {
   std::chrono::duration<double, std::milli> duration = end -start;
   printf("Sort type %s, data_size:%ld, Time cost:%lf ms\n", st.c_str(), v.size(), duration.count());
   return 0;
-#if 0
-  
-  auto&& vec = GenreateRandom(1024 * 10, -1024 * 512, 1024 *512);
-  
-  auto start = std::chrono::high_resolution_clock::now();
-  SelectionSort(vec);
-  assert(std::is_sorted(vec.begin(), vec.end()));
-  auto end = std::chrono::high_resolution_clock::now();
-  std::chrono::duration<double, std::milli> duration = end -start;
-  printf("Time cost:%lf ms\n", duration.count());
-
-  auto&& vec2 = GenreateRandom(1024 * 10, -1024 * 512, 1024 *512);
-  start = std::chrono::high_resolution_clock::now();
-  InsertionSort(vec2);
-  assert(std::is_sorted(vec2.begin(), vec2.end()));
-  end = std::chrono::high_resolution_clock::now();
-  duration = end -start;
-  printf("Insertion time cost:%lf ms\n", duration.count());
-  {
-
-    auto&& vec2 = GenreateRandom(1024 * 10, -1024 * 512, 1024 *512);
-    start = std::chrono::high_resolution_clock::now();
-    ShellSort(vec2);
-    assert(std::is_sorted(vec2.begin(), vec2.end()));
-    end = std::chrono::high_resolution_clock::now();
-    duration = end -start;
-    printf("Shell sort time cost:%lf ms\n", duration.count());
-  }
-#endif
-  return 0;
 }
 #endif
