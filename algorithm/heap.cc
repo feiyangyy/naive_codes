@@ -225,6 +225,33 @@ void TestHeap() {
   printf("\n");
 }
 
+// 多叉堆
+/**
+ * 多叉堆，多叉堆的起始位置要选在(n-1), 这样，k个节点的子节点的数组序号(不是编号）就是(k n, kn + 1, kn +2, ..., kn + n-1)
+ */
+template <typename T, int n>
+struct MultiBrachHeap {
+  std::vector<T> q_;
+  enum
+  {
+    branch_cnt = n;
+  };
+
+  MultiBrachHeap(std::size_t max_size)
+  {
+    q_.reserve(max_size + n);
+  }
+
+  void Sink(pos) {
+
+  }
+  void Swim(pos) {
+
+  }
+  void Push(const T &v);
+  T Pop();
+};
+
 int main(int argc, char** argv) {
   CLI::App app{"Heap implementation"};
   std::string file;
