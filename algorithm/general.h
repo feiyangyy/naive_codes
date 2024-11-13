@@ -3,6 +3,10 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <random>
+#include <algorithm>
+#include <fstream>
+
 template <typename T>
 std::vector<T> CreateVectorFromFile(const std::string& file) {
   std::fstream ifs(file);
@@ -38,5 +42,14 @@ struct BinaryTree {
   BinaryTree* left = nullptr;
   BinaryTree* right = nullptr;
 };
+
+std::vector<int> GenreateRandom(int n, int min, int max) {
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<> dis(min, max);
+  std::vector<int> result(n);
+  std::for_each(result.begin(), result.end(), [&dis, &gen](int& n){n = dis(gen);});
+  return result;
+}
 
 #endif

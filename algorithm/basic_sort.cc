@@ -350,7 +350,7 @@ void PrintVect(const std::vector<T>& v) {
   }
   std::cout << std::endl;
 }
-
+#ifndef BLOCK_MAIN
 int main(int argc, char** argv) {
 
   CLI::App app{"Sort algorithm implementations."};
@@ -426,3 +426,4 @@ int main(int argc, char** argv) {
 #endif
   return 0;
 }
+#endif
