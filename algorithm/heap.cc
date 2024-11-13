@@ -141,7 +141,7 @@ struct Heap {
   bool Full(int k) {
     return cnt >= k;
   }
-
+  // 以从小到大排序为例，先建立大根堆，再逐个pop即可（pop出来的元素放到末尾）
   static void Sort(const std::string& file){
     std::ifstream ifs(file);
     if(!ifs.is_open()) {
