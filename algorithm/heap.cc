@@ -6,6 +6,18 @@
 #include <CLI/CLI.hpp>
 #include <assert.h>
 template <typename T>
+bool CompareLE(const T &lhs, const T &rhs)
+{
+  return lhs < rhs;
+}
+
+template <typename T>
+bool CompareGE(const T &lhs, const T &rhs)
+{
+  return lhs > rhs;
+}
+
+template <typename T>
 struct Heap {
   std::vector<T> q;
   uint32_t cnt;
@@ -93,7 +105,13 @@ struct Heap {
   }
   
   void Push(const T& v) {
-    q.push_back(v);
+    // 如果Pop 没有pop_back, 那么就需要判定最后的位置
+    // 果然KISS 最佳。。。。
+    if(cnt < q.size() - 1) {
+      q[cnt+1] = v;
+    } else {
+      q.push_back(v);
+    }
     ++cnt;
     Swim(cnt);
   }
@@ -104,7 +122,9 @@ struct Heap {
     }
     T v = q.at(1);
     q[1] = q[cnt];
-    q.pop_back();
+    // 这个会影响topk 为什么呢
+    // 因为push_back 工作的不对!
+    // q.pop_back();
     --cnt;
     Sink(1);
     return v;
@@ -121,18 +141,34 @@ struct Heap {
   bool Full(int k) {
     return cnt >= k;
   }
+
+  static void Sort(const std::string& file){
+    std::ifstream ifs(file);
+    if(!ifs.is_open()) {
+      printf("Got fucked!\n");
+      return;
+    }
+    int sz;
+    ifs >> sz;
+    int num;
+    Heap<T> max_heap(sz, CompareLE<T>);
+    while (!ifs.eof())
+    {
+      ifs >> num;
+      max_heap.Push(num);
+    }
+    int idx = max_heap.cnt;
+    while (!max_heap.Empty())
+    {
+      idx = max_heap.cnt;
+      max_heap.q[idx] = max_heap.Pop();
+    }
+    assert(idx == 1);
+    assert(std::is_sorted(max_heap.q.begin(), max_heap.q.end()));
+  }
 };
 
 
-template <typename T>
-bool CompareLE(const T& lhs, const T& rhs) {
-  return lhs < rhs;
-}
-
-template <typename T>
-bool CompareGE(const T& lhs, const T& rhs) {
-  return lhs > rhs;
-}
 
 // 最大topk
 void DoTopK(const std::string &file, int k)
@@ -194,9 +230,23 @@ int main(int argc, char** argv) {
   std::string file;
   // std::string st;
   uint32_t cnt;
+  std::string type;
   app.add_option("-f,--file", file, "InputFile")->required();
-  app.add_option("-c, --count", cnt, "Maximum count")->required();
+  app.add_option("-c, --count", cnt, "Maximum count");
+  app.add_option("-t, --type", type, "Heap operation type")->required();
+
   CLI11_PARSE(app, argc, argv);
-  DoTopK(file, cnt);
+  if (type == "topk")
+  {
+    DoTopK(file, cnt);
+  } else if(type == "sort") {
+    Heap<int>::Sort(file);
+    printf("Sort finished! check passed!\n");
+  }
+  else
+  {
+    printf("Invalid operation type :%s \n", type.c_str());
+    return -1;
+  }
   return 0;
 }
