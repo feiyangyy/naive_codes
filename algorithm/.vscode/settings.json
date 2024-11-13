@@ -1,5 +1,5 @@
 {
-  "C_Cpp.default.compilerPath": "/usr/bin/g++-11",
+  "C_Cpp.default.compilerPath": "/usr/bin/gcc",
   "files.associations": {
     "vector": "cpp",
     "*.tcc": "cpp",
@@ -65,6 +65,31 @@
     "streambuf": "cpp",
     "thread": "cpp",
     "cinttypes": "cpp",
-    "typeinfo": "cpp"
+    "typeinfo": "cpp",
+    "charconv": "cpp",
+    "filesystem": "cpp",
+    "format": "cpp",
+    "ios": "cpp",
+    "locale": "cpp",
+    "mutex": "cpp",
+    "queue": "cpp",
+    "xfacet": "cpp",
+    "xhash": "cpp",
+    "xiosbase": "cpp",
+    "xlocale": "cpp",
+    "xlocbuf": "cpp",
+    "xlocinfo": "cpp",
+    "xlocmes": "cpp",
+    "xlocmon": "cpp",
+    "xlocnum": "cpp",
+    "xloctime": "cpp",
+    "xmemory": "cpp",
+    "xstddef": "cpp",
+    "xstring": "cpp",
+    "xtr1common": "cpp",
+    "xtree": "cpp",
+    "xutility": "cpp",
+    "condition_variable": "cpp",
+    "shared_mutex": "cpp"
   }
 }

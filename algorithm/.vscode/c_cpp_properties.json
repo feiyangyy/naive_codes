@@ -1,16 +1,17 @@
 {
     "configurations": [
         {
-            "name": "Linux",
+            "name": "linux",
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/CLI11/include/",
+                "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.29.30133/include/"
             ],
             "defines": [],
-            "compilerPath": null,
+            "compilerPath": "/usr/bin/g++",
             "cStandard": "c17",
-            "cppStandard": "c++14",
-            "intelliSenseMode": "linux-clang-x64"
+            "cppStandard": "c++11",
+            "intelliSenseMode": "linux-gcc-x64"
         }
     ],
     "version": 4

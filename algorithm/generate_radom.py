@@ -1,7 +1,7 @@
 import numpy as np
 
 # 设置要生成的数字数量
-num_count = 65536  # 例如生成 100 万个数字
+num_count = 65536 * 10  # 例如生成 100 万个数字
 min_value = 1        # 数字的最小值
 max_value = 1000000    # 数字的最大值
 
