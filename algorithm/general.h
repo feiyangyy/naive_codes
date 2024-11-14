@@ -51,5 +51,21 @@ std::vector<int> GenreateRandom(int n, int min, int max) {
   std::for_each(result.begin(), result.end(), [&dis, &gen](int& n){n = dis(gen);});
   return result;
 }
+template <typename T>
+void PrintVector(std::vector<T> vec, int w) {
+  if(!w) {
+    w = 10;
+  }
+  int cnt = 0;
+  for(const auto &v :vec){
+    std::cout << v << " ";
+    ++cnt;
+    if(cnt == 10) {
+      cnt = 0;
+      std::cout << std::endl;
+    }
+  }
+  std::cout << std::endl;
+}
 
 #endif

@@ -232,25 +232,113 @@ void TestHeap() {
 template <typename T, int n>
 struct MultiBrachHeap {
   std::vector<T> q_;
+  uint32_t cnt_ = 0;
+  std::function<bool(const T &, const T &)> fp_cmp_;
   enum
   {
-    branch_cnt = n;
+    branch_cnt = n,
+    offset = n - 2,
   };
 
-  MultiBrachHeap(std::size_t max_size)
+  explicit MultiBrachHeap(std::size_t max_size, std::function<bool(const T &, const T &)> cmp)
   {
     q_.reserve(max_size + n);
+    q_.push_back(T{});
+    // 起始位置和编号的关系，以及非空判断
+    // offset 代表的是空白位置，或者空白计数-1(因为索引从0开始)
+    // cnt 代表当前元素计数（编号），cnt + offset 就应当是当前元素位置
+    for (int i = 0; i <= offset; ++i)
+    {
+      q_.push_back(T{});
+    }
+    fp_cmp_ = cmp;
   }
 
-  void Sink(pos) {
-
+  void Sink(int pos) {
+    // 此处要找到pos对应的节点编号，再根据此编号，找到对应的child 范围
+    // int min_chd = seq * n;
+    int seq = pos - offset;
+    int min_chd_pos = seq * n;
+    int max_chd_pos = min_chd_pos + n - 1;
+    int swc = min_chd_pos;
+    // 孤寡老人
+    if (min_chd_pos > cnt_ + offset)
+    {
+      return;
+    }
+    // 闭区间
+    if (max_chd_pos > cnt_ + offset)
+    {
+      max_chd_pos = cnt_ + offset;
+    }
+    for (int i = min_chd_pos + 1; i <= max_chd_pos; ++i)
+    {
+      // 偏序关系的传递性
+      // 找到逆子
+      if(fp_cmp_(q_[swc], q_[i])) {
+        swc = i;
+        continue;
+      }
+    }
+    if(!fp_cmp_(q_[swc], q_[pos])) {
+      std::swap(q_[swc], q_[pos]);
+      Sink(swc);
+    }
   }
-  void Swim(pos) {
 
+  void Swim(int pos) {
+    int parent_seq = pos / n;
+    if(!parent_seq) {
+      return;
+    }
+    int parent_pos = parent_seq + offset;
+    // 除了当前这个节点，parent对应的其他子节点均满足偏序关系
+    if (!fp_cmp_(q_[pos], q_[parent_pos]))
+    {
+      std::swap(q_[pos], q_[parent_pos]);
+      Swim(parent_pos);
+    }
   }
-  void Push(const T &v);
-  T Pop();
+  // note, 此处不做堆排，仅实现k叉堆
+  void Push(const T &v) {
+    q_.push_back(v);
+    ++cnt_;
+    Swim(cnt_ + offset);
+  }
+
+  T Pop() {
+    if(!cnt_) {
+      return T{};
+    }
+    // first element
+    T v = q_.at(offset + 1);
+    std::swap(q_[offset + cnt_], q_[offset + 1]);
+    q_.pop_back();
+    --cnt_;
+    Sink(offset + 1);
+    return v;
+  }
+
+  bool Empty(){
+    return cnt_ == 0;
+  }
 };
+
+void TestMultiHeap(){
+  auto v = GenreateRandom(20, -10000, 10000);
+  auto min_heap = MultiBrachHeap<int, 8>(1000, CompareGE<int>);
+  for(const auto &vv:v) {
+    min_heap.Push(vv);
+  }
+  int idx = 0;
+  while (!min_heap.Empty())
+  {
+    v[idx++] = min_heap.Pop();
+  }
+  assert(std::is_sorted(v.begin(), v.end()));
+  printf("Multi heap check passed!\n");
+  PrintVector<int>(v, 10);
+}
 
 int main(int argc, char** argv) {
   CLI::App app{"Heap implementation"};
@@ -269,6 +357,8 @@ int main(int argc, char** argv) {
   } else if(type == "sort") {
     Heap<int>::Sort(file);
     printf("Sort finished! check passed!\n");
+  } else if(type == "mt") {
+    TestMultiHeap();
   }
   else
   {
