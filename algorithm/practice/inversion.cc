@@ -29,9 +29,10 @@ struct InversionMergeCount {
       return;
     }
     if(r - l <= 2) {
-      if (inputs[r] < inputs[l]) {
+      // 开闭区间啊，开闭区间！！！！！！！
+      if (inputs[r-1] < inputs[l]) {
         ++inverse_count_;
-        std::swap(inputs[l], inputs[r]);
+        std::swap(inputs[l], inputs[r-1]);
       }
       return;
     }
@@ -39,7 +40,8 @@ struct InversionMergeCount {
     int idx = l;
     while (li < mid && ri < r)
     {
-      if(inputs[li] <= inputs[mid]) {
+      // 怎么能写成小于mid的.... 忘得速度就尼玛离谱
+      if(inputs[li] <= inputs[ri]) {
         help_[idx++] = inputs[li++];
       } else {
         help_[idx++] = inputs[ri++];
@@ -53,7 +55,7 @@ struct InversionMergeCount {
     while(ri < r){
       help_[idx++] = inputs[ri++];
     }
-    for (int i = li; i < r;++i) {
+    for (int i = l; i < r;++i) {
       inputs[i] = help_[i];
     }
   }
@@ -75,10 +77,15 @@ struct InversionMergeCount {
     printf("Inversion count:%d\n", inverse_count_);
   }
 };
-
+/// @brief  开闭区间 开闭区间 开闭区间 left_idx, right_idx！！！！
+/// @param argc 
+/// @param argv 
+/// @return 
 int main(int argc, char** argv) {
   auto isc = InversionMergeCount<int>(10);
   std::vector<int> a = GenreateRandom(3, -1000, 1000);
+  isc.Sort(a);
+  a = {5,4,3,2,1};
   isc.Sort(a);
   return 0;
 }
