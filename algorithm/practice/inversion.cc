@@ -39,7 +39,7 @@ struct InversionMergeCount {
     int idx = l;
     while (li < mid && ri < r)
     {
-      if(inputs[li] <= inputs[r]) {
+      if(inputs[li] <= inputs[mid]) {
         help_[idx++] = inputs[li++];
       } else {
         help_[idx++] = inputs[ri++];
@@ -51,7 +51,7 @@ struct InversionMergeCount {
       help_[idx++] = inputs[li++];
     }
     while(ri < r){
-      help_[idx++] = inputs[li++];
+      help_[idx++] = inputs[ri++];
     }
     for (int i = li; i < r;++i) {
       inputs[i] = help_[i];
@@ -59,6 +59,10 @@ struct InversionMergeCount {
   }
 
   void MergeSort(std::vector<T>& in, int l, int r) {
+    // fuck! 此处总是容易忘记
+    if(l >= r - 1) {
+      return;
+    }
     int mid = (l + r) / 2;
     MergeSort(in, l, mid);
     MergeSort(in, mid, r);
@@ -68,9 +72,13 @@ struct InversionMergeCount {
   void Sort(std::vector<T>& in) {
     inverse_count_ = 0;
     MergeSort(in, 0, in.size());
+    printf("Inversion count:%d\n", inverse_count_);
   }
 };
 
 int main(int argc, char** argv) {
-
+  auto isc = InversionMergeCount<int>(10);
+  std::vector<int> a = GenreateRandom(3, -1000, 1000);
+  isc.Sort(a);
+  return 0;
 }

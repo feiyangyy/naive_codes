@@ -11,6 +11,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/CLI11/include)
 add_executable(union union.cc)
 add_executable(sort basic_sort.cc)
 add_executable(heap heap.cc)
+add_executable(isc practice/inversion.cc)
 # add_compile_options("-g3")
 set(CMAKE_CXX_FLAGS "-g3")
 
