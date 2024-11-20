@@ -68,4 +68,14 @@ void PrintVector(std::vector<T> vec, int w) {
   std::cout << std::endl;
 }
 
+template <typename T, typename U>
+struct LinkListKV {
+  T key_;
+  // optional
+  U val_;
+  LinkList<T> * next_;
+};
+
+
+
 #endif
