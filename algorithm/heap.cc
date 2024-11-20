@@ -27,7 +27,8 @@ struct Heap {
   {
     fp_cmp = cmp;
     q.reserve(sz + 1);
-    q.push_back(-1);
+    // 必须提供默认构造函数
+    q.push_back(T{});
     cnt = 0;
   }
   // 下沉，删去一个节点后，从尾部将一个节点放到根节点，并逐步下沉
@@ -340,6 +341,7 @@ void TestMultiHeap(){
   PrintVector<int>(v, 10);
 }
 
+#ifndef BLOCK_MAIN
 int main(int argc, char** argv) {
   CLI::App app{"Heap implementation"};
   std::string file;
@@ -367,3 +369,4 @@ int main(int argc, char** argv) {
   }
   return 0;
 }
+#endif

@@ -12,6 +12,7 @@ add_executable(union union.cc)
 add_executable(sort basic_sort.cc)
 add_executable(heap heap.cc)
 add_executable(isc practice/inversion.cc)
+add_executable(seq search/seq_search.cc)
 # add_compile_options("-g3")
 set(CMAKE_CXX_FLAGS "-g3")
 

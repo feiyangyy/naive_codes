@@ -70,12 +70,15 @@ void PrintVector(std::vector<T> vec, int w) {
 
 template <typename T, typename U>
 struct LinkListKV {
+  // default
+  LinkListKV(){}
+  // with variable.
+  LinkListKV(const T& k, const U& v):key_(k), val_(v), next_(nullptr){}
+  // key
   T key_;
   // optional
   U val_;
-  LinkList<T> * next_;
+  LinkListKV<T, U> *next_;
 };
-
-
 
 #endif
