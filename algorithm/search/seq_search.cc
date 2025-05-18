@@ -224,4 +224,4 @@ int main(int argc, char** argv) {
   app.add_option("-f,--file", file, "InputFile")->required();
   CLI11_PARSE(app, argc, argv);
   return DoWorldCountLS(file);
-}
+} 

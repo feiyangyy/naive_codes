@@ -318,6 +318,7 @@ struct QuickSort {
     // 这里注意，左侧不一定有序，但是左侧一定比 所选的元素要小! 快排只需要保证此规则即可
     // printf("input[l] %d\n", input[l]);
     // 这里也就是换到那个位置? 也就是pl 这个位置的情况是什么样的?
+    // after the loop.
     if(l != pl) {
       std::swap(input[l], input[pl]);
     }
